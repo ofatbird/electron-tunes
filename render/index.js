@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const electron = require('electron')
 const Store = require('./model')
 const remote = electron.remote
+const TweenMax = window.TweenMax
 
 const shareStore = {
     docs: []
@@ -30,6 +31,8 @@ const body = document.querySelector('body')
 const mainContent = document.querySelector('.main-content')
 const ul = document.querySelector('ul')
 const next = document.querySelector('#next')
+const copy = document.querySelector('#copytext')
+
 
 const vm = new window.Vue({
     el: '#container',
@@ -42,6 +45,21 @@ connectMongo(function (db) {
     const win = remote.getCurrentWindow()
     getBundles(0).then((docs) => {
         docs.forEach(element => {
+            const $body = $(element.info)
+            const p = $body.find("p")
+            const star = $body.find('.star-name>a')
+            let htmlStr = ''
+            element.info = ''
+            for (let i = 0; i < 3; i++) {
+                element.info += p[i].outerHTML.replace(/style=\"[\s\S]*?\"/ig,'')
+            }
+            if (star.length) {
+                star.each((index, ele) => { htmlStr += `<span>${ele.innerHTML}</span>` })
+            } else {
+                htmlStr = `<span>未知</span>`
+            }
+            element.info += `<p><span>演員:</span>${htmlStr}</p>`
+            element.magnet = element.magnet.replace(/window\.open\(\'([\s\S]*?)\',\'_self\'\)/ig, function (matched, $1) { return `copyText('${$1}')` })
             vm.docs.push(element)
         });
         window.stop()
@@ -50,16 +68,32 @@ connectMongo(function (db) {
     win.on('closed', function () {
         db.close()
     })
-    next.addEventListener('click', function(e) {
+    next.addEventListener('click', function (e) {
         const self = this
         console.log('fetching')
         this.setAttribute('disabled', true)
         currentPage++
-        getBundles(currentPage*15).then((docs) => {
+        getBundles(currentPage * 15).then((docs) => {
             console.log('fetched')
             self.removeAttribute('disabled')
             vm.docs.length = 0
             docs.forEach((element, index) => {
+                const $body = $(element.info)
+                const p = $body.find("p")
+                const star = $body.find('.star-name>a')
+                let htmlStr = ''
+                element.info = ''
+                for (let i = 0; i < 3; i++) {
+                    p[i].removeAttribute('style')
+                    element.info += p[i].outerHTML
+                }
+                if (star.length) {
+                    star.each((index, ele) => { htmlStr += `<span>${ele.innerHTML}</span>` })
+                } else {
+                    htmlStr = `<span>未知</span>`
+                }
+                element.info += `<p><span>演員:</span>${htmlStr}</p>`
+                element.magnet = element.magnet.replace(/window\.open\(\'([\s\S]*?)\',\'_self\'\)/ig, function (matched, $1) { return `copyText('${$1}')` })
                 vm.docs.push(element)
             });
         })
@@ -74,5 +108,16 @@ function getBundles(offset) {
         })
     })
 }
+const $loadingHint = $('.loading-hint')
+const $copyHint = $('.copy-hint')
 
+window.copyText = function copyText(text) {
+    copy.value = text
+    copy.select()
+    document.execCommand('copy')
+    $copyHint.removeClass('hidden')
+    setTimeout(() => {
+        $copyHint.addClass('hidden')
+    }, 1500)
+}
 

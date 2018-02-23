@@ -6,6 +6,7 @@
     <title>Hello World!</title>
     <link rel="stylesheet" href="./assets/styles/app.css">
     <script src="./libs/TweenMax.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.slim.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 
@@ -24,16 +25,30 @@
         <div id="container-null-object"></div>
     </div>
     <div class="btns">
-        <button id="prev">上一页</button><button id="next">下一页</button>
+        <button id="prev" style="left:20px;">上一頁</button>
+        <button id="next" style="right:20px;">下一頁</button>
+        <div class="hint-holder">
+            <div class="copy-hint hidden">鏈接已拷貝!!!</div>
+            <div class="loading-hint hidden">正在加載中...</div>
+        </div>
     </div>
     <div class="main-content">
         <ul id="container">
             <li v-for="item in docs" :key="item.number">
-                <div class="left-ctn"><img :src="item.pic" /></div>
-                <div class="left-ctn" v-html="item.magnet"></div>
+                <div class="top-ctn">
+                    <div class="left">
+                        <img :src="item.pic" />
+                    </div>
+                    <div class="right" v-html="item.info"></div>
+                </div>
+                <div class="bottom-ctn" v-html="item.magnet"></div>
             </li>
         </ul>
     </div>
+    <!-- for copy -->
+    <input type="text" id="copytext">
+    <!--  -->
+    <!--  -->
     <script>
         (function () {
             var bezierPoint = document.getElementById('null-object');
