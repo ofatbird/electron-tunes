@@ -13,7 +13,8 @@ const shareStore = {
 let currentPage = 0
 
 function connectMongo(excute) {
-    mongoose.connect('mongodb://admin:785689@cluster0-shard-00-00-koeuy.mongodb.net:27017,cluster0-shard-00-01-koeuy.mongodb.net:27017,cluster0-shard-00-02-koeuy.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin');
+    // mongodb://admin:785689@cluster0-shard-00-00-koeuy.mongodb.net:27017,cluster0-shard-00-01-koeuy.mongodb.net:27017,cluster0-shard-00-02-koeuy.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin
+    mongoose.connect('mongodb://admin:785689@lescluster-shard-00-00-njhnj.mongodb.net:27017,lescluster-shard-00-01-njhnj.mongodb.net:27017,lescluster-shard-00-02-njhnj.mongodb.net:27017/test?ssl=true&replicaSet=lesCluster-shard-0&authSource=admin');
 
     const db = mongoose.connection;
 
@@ -73,6 +74,7 @@ connectMongo(function (db) {
             }
             element.info += `<p><span>演員:</span>${htmlStr}</p>`
             element.magnet = element.magnet.replace(/window\.open\(\'([\s\S]*?)\',\'_self\'\)/ig, function (matched, $1) { return `copyText('${$1}')` })
+            console.log(element.magnet)
             vm.docs.push(element)
             $page.get(0).value = (currentPage + 1)
         });
@@ -81,13 +83,12 @@ connectMongo(function (db) {
     win.on('closed', function () {
         db.close()
     })
-    $('.prev').on('click', function () {
+    $('#prev').on('click', function () {
         if (!currentPage) reutrn
         $loadingHint.removeClass('hidden')
         $btn.prop('disabled', true)
         currentPage--
         getBundles(currentPage * 15).then((res) => {
-            self.removeAttribute('disabled')
             vm.docs.length = 0
             res.docs.forEach((element, index) => {
                 const $body = $(element.info)
@@ -174,6 +175,7 @@ connectMongo(function (db) {
                     element.info += `<p><span>演員:</span>${htmlStr}</p>`
                     element.magnet = element.magnet.replace(/window\.open\(\'([\s\S]*?)\',\'_self\'\)/ig, function (matched, $1) { return `copyText('${$1}')` })
                     vm.docs.push(element)
+                    currentPage = page - 1;
                     $btn.prop('disabled', false)
                     $loadingHint.addClass('hidden')
                     window.scroll(0, 0);
@@ -185,7 +187,7 @@ connectMongo(function (db) {
 
 function getBundles(offset) {
     return new Promise((resolve, reject) => {
-        Store.paginate({}, { offset, limit: 15 }, function (err, result) {
+        Store.paginate({}, { sort:'-insertDate', offset, limit: 15 }, function (err, result) {
             if (err) { reject(err) } else { resolve(result) }
         })
     })
