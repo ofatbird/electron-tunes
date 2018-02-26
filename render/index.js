@@ -8,7 +8,6 @@ const { remote, clipboard } = electron
 const shareStore = {
     docs: []
 }
-
 const loadContent = document.querySelector('.loading-content')
 const body = document.querySelector('body')
 const mainContent = document.querySelector('.main-content')
@@ -61,7 +60,7 @@ connectMongo(function (db) {
     const win = remote.getCurrentWindow()
     pText.text('正在获取资源...')
     getBundles(currentPage).then((res) => {
-        composeResource(res)
+        composeResource(res)      
         $page.get(0).value = currentPage + 1
         body.removeChild(loadContent)
     })
