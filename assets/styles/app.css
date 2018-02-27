@@ -46,9 +46,10 @@ a {
 
 img,
 p,
-table
+table,
+.info
 {
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 table {
@@ -60,7 +61,6 @@ table {
     color: #888888;
     animation: sparky 1.1s infinite ease;
 }
-
 
 .btns {
     position: fixed;
@@ -92,11 +92,6 @@ table {
     transition: opacity .5s ease-in-out;
 }
 
-.hidden {
-    /* display: none; */
-    opacity: 0;
-}
-
 #prev,
 #next {
     position: absolute;
@@ -113,28 +108,44 @@ table {
 .top-ctn {
     padding: 5px;
     display: flex;
-    background: #112233;
+    /* background: #112233; */
 }
 
 li {
     display: block;
     /* margin: 20px 0; */
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, .6)
+    /* box-shadow: 0px 0px 5px rgba(0, 0, 0, .6) */
 }
 
 .left {
-    background: blanchedalmond
+    /* background: blanchedalmond */
 }
 
 .right {
     flex-grow: 1;
     margin-left: 20px;
-    background: #666666;
+    /* background: #666666; */
 }
 
 .bottom-ctn {
     padding: 5px;
-    background-color: blueviolet
+    /* background-color: blueviolet */
+}
+
+.tiptext, .loadtiptext{
+    position: fixed;
+    width: 120px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    /* padding: 10px 5px; */
+    background: aliceblue;
+    margin: auto;
+    border-radius: 3px;
 }
 
 footer {
@@ -147,6 +158,19 @@ footer {
     padding: 10px 0;
     background: #ffffff;
     box-shadow: 0 0 5px black;
+}
+.loader-wrapper {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;
+}
+.loadtiptext {
+    width: 160px;
 }
 #page {
     text-align: center;
