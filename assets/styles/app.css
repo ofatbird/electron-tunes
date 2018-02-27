@@ -23,6 +23,10 @@ span {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .loading-content {
     width: 100%;
     height: 100%;
