@@ -12,9 +12,12 @@ require('electron-reload')(__dirname)
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({resizable: false, width: 630, height: 700})
+  mainWindow = new BrowserWindow({
+    minWidth: 550, minHeight: 600, width: 630, height: 700,
+    titleBarStyle: 'hidden'
+  })
 
   mainWindow.setMenu(null)
   // and load the index.html of the app.
