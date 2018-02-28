@@ -153,8 +153,6 @@ Vue.component('list-component', {
         detect: function () {
             this.total++
             if (this.total < this.docs.length) return
-            this.iscroll.refresh()
-            this.iscroll.scrollTo(0, 0)
         }
     },
     mounted: function () {
@@ -167,6 +165,10 @@ Vue.component('list-component', {
             interactiveScrollbars: true,
             shrinkScrollbars: 'scale',
         })
+    },
+    updated: function(){
+        this.iscroll.refresh()
+        this.iscroll.scrollTo(0, 0)
     }
 })
 
