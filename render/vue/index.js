@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const electron = require('electron')
+const IScroll = require('./iscroll')
 const Store = require('./model')
 const { remote, clipboard } = electron
 
@@ -52,33 +53,54 @@ Vue.component('header-component', {
 
 Vue.component('list-component', {
     template: `<div class="main-content">
-                    <div style="height:36px;"></div>
+                   <!-- <div style="height:36px;"></div>-->
+                   <div id="scroller">
                     <ul>
                         <li class="itemlist" v-for="item in items" :key="item.number">
                             <div class="top-ctn">
                                 <div class="left">
-                                    <img :src="item.pic" />
+                                    <img :src="item.pic" @load="detect" />
                                 </div>
                                 <div class="right" v-html="item.info"></div>
                             </div>
                             <div class="bottom-ctn">
-                                <ul>
-                                    <li class="maglist" v-for="magnet in item.maglist">
-                                        <a href="#" v-html="magnet.htmlstr"></a>
-                                        <button @click="copyText(magnet.href)">复制</button>
-                                    </li>
-                                </ul>  
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col"> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template v-for="magnet in item.maglist">
+                                        <tr>
+                                            <td>{{magnet.name}}</td>
+                                            <td>{{magnet.size}}</td>
+                                            <td><button @click="copyText(magnet.href)">复制</button></td>
+                                        </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
                             </div>
                         </li>
                     </ul>
-                    <div style="height:42px;"></div>
-                    <div class="tiptext" v-show="isCopied">链接已拷贝</div>
+                    </div>
+                   <!-- <div style="height:40px;"></div> -->
+                    <div class="tiptext" v-if="isCopied">链接已拷贝</div>
                 </div>`,
     props: ['docs'],
     data: function () {
         return {
             sid: null,
+            total: 0,
+            iscroll: null,
             isCopied: false,
+        }
+    },
+    watch: {
+        docs: function () {
+            this.total = 0
         }
     },
     computed: {
@@ -107,14 +129,14 @@ Vue.component('list-component', {
                 element.info += `<p><span>演員:</span>${htmlstr}</p>`
                 for (let i = 0; i < atag.length; i += 3) {
                     list.push({
-                        htmlstr: `<span class="name">${atag[i].innerText}</span><span class="size">${atag[i + 1].innerText}</span>`,
+                        // htmlstr: `<span class="name">${atag[i].innerText}</span><span class="size">${atag[i + 1].innerText}</span>`,
+                        name: atag[i].innerText,
+                        size: atag[i + 1].innerText,
                         href: unescape(atag[i].getAttribute('href')),
                         // htmlstr: `<span class="name"></span><span class="size"></span>`,
                     })
                 }
                 element.maglist = list
-
-                window.scrollTo(0, 0)
                 return element
             }) : this.docs
         }
@@ -127,15 +149,32 @@ Vue.component('list-component', {
             this.sid = setTimeout(() => {
                 this.isCopied = false
             }, 900)
+        },
+        detect: function () {
+            this.total++
+            if (this.total < this.docs.length) return
+            this.iscroll.refresh()
+            this.iscroll.scrollTo(0, 0)
         }
+    },
+    mounted: function () {
+        this.iscroll = new IScroll('.main-content', {
+            scrollbars: 'custom',
+            mouseWheel: true,
+            disableMouse: true,
+            disablePointer: true,
+            disableTouch: true,
+            interactiveScrollbars: true,
+            shrinkScrollbars: 'scale',
+        })
     }
 })
 
 Vue.component('footer-component', {
     template: `<footer>
-                    <button id="prev" style="left:20px;" @click="getPrevPageContent" v-if="prevShow">上一頁</button>
-                    <button id="next" style="right:20px;" @click="getNextPageContent" v-if="nextShow">下一頁</button>
-                    <input id="page" type="text" :value="value" @keyup.enter="getGivenPageContent"> /
+                    <button id="prev" class="btn btn-primary btn-sm" style="left:20px;" @click="getPrevPageContent" v-if="prevShow">上一頁</button>
+                    <button id="next" class="btn btn-primary btn-sm" style="right:20px;" @click="getNextPageContent" v-if="nextShow">下一頁</button>
+                    <input id="page" type="text" v-model="value" @blur="getGivenPageContent" @keyup.enter="getGivenPageContent"> /
                     <span class="totalpages">{{totals}}</span>
                     <div class="loader-wrapper" v-if="isloading">
                         <div class="loadtiptext">
@@ -160,7 +199,7 @@ Vue.component('footer-component', {
             return this.currentpage > 0
         },
         nextShow: function () {
-            return this.value < this.totals
+            return this.currentpage + 1 < this.totals
         }
     },
     methods: {
@@ -177,7 +216,7 @@ Vue.component('footer-component', {
         getNextPageContent: function () {
             this.isloading = true
             getBundles(this.value * 15).then(resource => {
-                this.isloading = false 
+                this.isloading = false
                 this.modify(resource, this.value)
             })
         },
@@ -193,7 +232,6 @@ Vue.component('footer-component', {
         }
     }
 })
-
 
 Vue.component('store-component', {
     template: `<div class="store">
@@ -218,7 +256,7 @@ Vue.component('store-component', {
             console.log('fetched')
             // this.docs = resource.docs
             this.resource = Object.assign({}, this.resource, resource)
-            setTimeout(() =>{ this.loaderShow = false },500)
+            setTimeout(() => { this.loaderShow = false }, 500)
         })
     },
 
@@ -235,6 +273,6 @@ Vue.component('store-component', {
     }
 })
 
-new Vue({
-    el: '#container'
-})
+// new Vue({
+//     el: '#container'
+// })

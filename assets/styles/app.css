@@ -1,16 +1,7 @@
-@font-face {
-    font-family: 'webfont';
-    src: url('webfont.eot');
-    /* IE9*/
-    src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('webfont.woff') format('woff'), /* chrome、firefox */
-    url('webfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-    url('webfont.svg#webfont') format('svg');
-    /* iOS 4.1- */
-}
 
 html,body,.main-content {
     width: 100%;
+
 }
 
 body,
@@ -18,7 +9,6 @@ ul,
 p,
 div,
 span {
-    font-family: 'webfont', 'Courier New', Courier, monospace;
     margin: 0;
     padding: 0;
 }
@@ -46,13 +36,18 @@ a {
 
 img,
 p,
-table,
+table>tbody,
 .info
 {
-    /* visibility: hidden; */
+    visibility: hidden;
 }
 
 table {
+    margin: 0 auto;
+}
+
+#container {
+    max-width: 640px;
     margin: 0 auto;
 }
 
@@ -66,10 +61,10 @@ table {
     position: fixed;
     width: 100%;
     height: 36px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 2px 0px #888888;
+    background-color: rgb(168,9,3);
     top: 0;
     left: 0;
+    -webkit-app-region: drag;
 }
 
 .hint-holder {
@@ -95,20 +90,52 @@ table {
 #prev,
 #next {
     position: absolute;
-    width: 100px;
-    height: 24px;
-    outline: none;
-    border: none;
-    border-radius: 2px;
     /* top: 6px; */
     z-index: 99;
     cursor: pointer;
 }
 
+#store {
+    position: absolute;
+    height: 100%;
+}
+
+.main-content {
+    position: absolute;
+    max-width: 640px;
+    top: 36px;
+    bottom: 40px;
+    overflow: hidden;
+} 
+
+#scroller {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    user-select: none;
+}
+
+.iScrollVerticalScrollbar {
+    position: absolute;
+    z-index: 9999;
+    width: 7px;
+    bottom: 2px;
+    top: 2px;
+    right: 1px;
+}
+
+.iScrollIndicator {
+    box-sizing: border-box;
+    position: absolute;
+    background: rgba(93, 87, 87, 0.7);
+    border-radius: 3px;
+    width: 100%;
+}
+
 .top-ctn {
     padding: 5px;
     display: flex;
-    /* background: #112233; */
+    background: #112233;
 }
 
 li {
@@ -117,14 +144,18 @@ li {
     /* box-shadow: 0px 0px 5px rgba(0, 0, 0, .6) */
 }
 
+.itemlist:not(:first-child) {
+    border-top: 1px solid #ccc;
+}
+
 .left {
-    /* background: blanchedalmond */
+    background: rgba(255, 235, 205, 0.434)
 }
 
 .right {
     flex-grow: 1;
     margin-left: 20px;
-    /* background: #666666; */
+    background: #a48686b1;
 }
 
 .bottom-ctn {
@@ -155,14 +186,15 @@ footer {
     z-index: 99;
     bottom: 0;
     left: 0;
-    padding: 10px 0;
-    background: #ffffff;
+    padding: 5px 0;
+    background: #ece3de;
     box-shadow: 0 0 5px black;
+    user-select: none;
 }
 .loader-wrapper {
     position: fixed;
     margin: auto;
-    top: 0;
+    top: 36px;
     left: 0;
     bottom: 0;
     right: 0;
@@ -178,6 +210,10 @@ footer {
 }
 
 /* =====for loading===== */
+
+.loading-content {
+    -webkit-app-region: drag;
+}
 
 .spinner {
     margin: 100px auto;
