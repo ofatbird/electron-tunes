@@ -45,7 +45,7 @@ Vue.component('loading-component', {
 })
 
 Vue.component('header-component', {
-    template: `<div class="header">
+    template: `<div class="store-header">
                     <div class="logo-text">
                         <img src="./assets/images/logo.png">
                     </div>
@@ -275,7 +275,7 @@ Vue.component('store-component', {
             mianWindow.setOpacity(0)
             setTimeout(() => { 
                 this.loaderShow = false
-                mianWindow.setSize(50, 600)
+                mianWindow.setSize(600, 700)
                 mianWindow.setResizable(true)
                 mianWindow.center()
                 mianWindow.setOpacity(1)
