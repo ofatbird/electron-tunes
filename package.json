@@ -1,8 +1,11 @@
 {
   "name": "electron-tunes",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "build": "electron-builder"
+  },
   "builds": {
     "appId": "com.guthub.ofatbird",
     "productName": "A Test APP",
@@ -34,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/ofatbird/electron-tunes/issues"
   },
-  "homepage": "https://github.com/ofatbird/electron-tunes#readme"
+  "homepage": "https://github.com/ofatbird/electron-tunes#readme",
+  "devDependencies": {
+    "electron-builder": "^20.2.0"
+  }
 }
