@@ -1,6 +1,6 @@
 {
   "name": "electron-tunes",
-  "version": "1.0.0",
+  "version": "1.0",
   "description": "",
   "main": "index.js",
   "builds": {
@@ -8,6 +8,21 @@
     "productName": "A Test APP",
     "directories": {
       "app": "./app"
+    },
+    "publish": {
+      "provider": "github",
+      "repo": "electron-tunes",
+      "owner": "ofatbird"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
     }
   },
   "repository": {

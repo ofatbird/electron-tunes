@@ -43,7 +43,7 @@ p,
 .hidden,
 .info
 {
-    /* visibility: hidden; */
+    visibility: hidden;
 }
 
 table {
@@ -170,7 +170,7 @@ img {
 .top-ctn {
     padding: 5px;
     display: flex;
-    /* background: #112233; */
+    background: #112233;
 }
 
 li {
@@ -186,18 +186,18 @@ li {
 .left {
     width: 147px;
     height: 200px;
-    /* background: rgba(255, 235, 205, 0.434) */
+    background: rgba(255, 235, 205, 0.434)
 }
 
 .right {
     flex-grow: 1;
     margin-left: 20px;
-    /* background: #a48686; */
+    background: #a48686;
 }
 
 .bottom-ctn {
     padding: 5px;
-    /* background-color: blueviolet */
+    background-color: rgb(192, 147, 233)
 }
 
 .tiptext, .loadtiptext{

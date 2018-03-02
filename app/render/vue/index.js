@@ -4,7 +4,7 @@ const IScroll = require('./iscroll')
 const Store = require('./model')
 const { remote, clipboard } = electron
 
-const mianWindow = remote.getCurrentWindow()
+const mainWindow = remote.getCurrentWindow()
 // connect to MongoDB Atlas
 function connectMongo(excute) {
     // mongodb://admin:785689@cluster0-shard-00-00-koeuy.mongodb.net:27017,cluster0-shard-00-01-koeuy.mongodb.net:27017,cluster0-shard-00-02-koeuy.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin
@@ -55,7 +55,7 @@ Vue.component('header-component', {
                 </div>`,
     methods: {
         closeWin: function() {
-            mianWindow.close()
+            mainWindow.close()
         }
     }
 })
@@ -272,13 +272,14 @@ Vue.component('store-component', {
             console.log('fetched')
             // this.docs = resource.docs
             this.resource = Object.assign({}, this.resource, resource)
-            mianWindow.setOpacity(0)
+            mainWindow.setOpacity(0)
             setTimeout(() => { 
                 this.loaderShow = false
-                mianWindow.setSize(600, 700)
-                mianWindow.setResizable(true)
-                mianWindow.center()
-                mianWindow.setOpacity(1)
+                mainWindow.setMinimumSize(600, 700)
+                mainWindow.setSize(600, 700)
+                mainWindow.setResizable(true)
+                mainWindow.center()
+                mainWindow.setOpacity(1)
             }, 500)
         })
     },
