@@ -50,7 +50,7 @@ Vue.component('loading-component', {
 Vue.component('header-component', {
     template: `<div class="store-header">
                     <div class="logo-text" :class="{'center-logo': !show}">
-                        <img src="./assets/images/logo.png">
+                        <img src="./assets/images/store-logo.png">
                     </div>
                     <div class="search" v-if="show">
                         <input type="text" @keyup.enter="search" placeholder="search" />

@@ -38,13 +38,13 @@ body {
     font-size: 60px;
 } */
 
-.left,
+/* .left,
 p,
 .hidden,
 .info
 {
     visibility: hidden;
-}
+} */
 
 table {
     margin: 0 auto;
@@ -80,9 +80,9 @@ img {
 
 .logo-text {
     position: absolute;
-    top: 10px;
-    left: 50px;
-    width: 56px;
+    top: 14px;
+    left: 24px;
+    width: 80px;
     margin: auto;
 }
 .logo-text.center-logo {
@@ -129,7 +129,7 @@ img {
 }
 
 .force-top {
-    top: 82px !important;
+    top: 81px !important;
 }
 
 .hint-holder {
@@ -157,11 +157,11 @@ img {
 .back::before {
     content: '';
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     position: absolute;
-    right: 41px;
-    top: 3px;
+    right: 42px;
+    top: 4px;
     background: rgb(45, 117, 224);
     transform: rotate(45deg)
 }
@@ -238,7 +238,7 @@ img {
 .top-ctn {
     padding: 5px;
     display: flex;
-    background: #112233;
+    /* background: #112233; */
 }
 
 li {
@@ -254,18 +254,18 @@ li {
 .left {
     width: 147px;
     height: 200px;
-    background: rgba(255, 235, 205, 0.434)
+    /* background: rgba(255, 235, 205, 0.434) */
 }
 
 .right {
     flex-grow: 1;
     margin-left: 20px;
-    background: #a48686;
+    /* background: #a48686; */
 }
 
 .bottom-ctn {
     padding: 5px;
-    background-color: rgb(192, 147, 233)
+    /* background-color: rgb(192, 147, 233) */
 }
 
 .tiptext, .loadtiptext{
