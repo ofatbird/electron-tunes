@@ -6,7 +6,7 @@
   "scripts": {
     "build": "electron-builder"
   },
-  "builds": {
+  "build": {
     "appId": "com.guthub.ofatbird",
     "productName": "A Test APP",
     "directories": {
@@ -18,14 +18,7 @@
       "owner": "ofatbird"
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "ia32"
-          ]
-        }
-      ]
+      "target": ["nsis", "zip"]
     }
   },
   "repository": {
