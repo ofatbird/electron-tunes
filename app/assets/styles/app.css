@@ -41,9 +41,11 @@ body {
 .left,
 p,
 .hidden,
+img,
 .info
 {
-    visibility: hidden;
+    /* visibility: hidden; */
+    opacity: 0;
 }
 
 table {

@@ -31,10 +31,6 @@ function getBundles(offset, query) {
         })
     })
 }
-// copy to clipboard 
-// window.copyText = function copyText(text) {
-//     clipboard.writeText(unescape(text))
-// }
 
 Vue.component('loading-component', {
     template: `<div class="loading-content">
@@ -118,6 +114,24 @@ Vue.component('header-component', {
     }
 })
 
+Vue.component('poster-component', {
+    template: `<div class="viewer-container">
+                    <div class="viewer-closeBtn" @click="close">
+                        <img src="./assets/images/close.svg">
+                    </div>
+                    <div class="loader"></div>
+                    <div class="viewer">
+                        <img :src="cover" />
+                    </div>
+               </div>`,
+    props: ['cover'],
+    methods: {
+        close: function () {
+            this.$emit('close')
+        }
+    }
+})
+
 Vue.component('list-component', {
     template: `<div class="main-content" :class="{'force-top': top}">
                    <!-- <div style="height:36px;"></div>-->
@@ -126,7 +140,7 @@ Vue.component('list-component', {
                         <li class="itemlist" v-for="item in items" :key="item.number">
                             <div class="top-ctn">
                                 <div class="left">
-                                    <img :src="item.pic" />
+                                    <img :src="item.pic"  @click="openViewer(item.pic)"/>
                                 </div>
                                 <div class="right" v-html="item.info"></div>
                             </div>
@@ -216,24 +230,29 @@ Vue.component('list-component', {
             this.sid = setTimeout(() => {
                 this.isCopied = false
             }, 900)
+        },
+        openViewer: function (url) {
+            this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
         }
     },
     mounted: function () {
-        this.iscroll = new IScroll('.main-content', {
-            // scrollbars: 'custom',
-            indicators: {
-                el: "#indicator",
-                ignoreBoundaries: false,
-                listenX: false,
-                interactive: true,
-                resize: true,
-            },
-            mouseWheel: true,
-            disableMouse: true,
-            disablePointer: true,
-            disableTouch: true,
-            // interactiveScrollbars: true,
-            // shrinkScrollbars: 'scale',
+        this.$nextTick(() => {
+            this.iscroll = new IScroll('.main-content', {
+                // scrollbars: 'custom',
+                indicators: {
+                    el: "#indicator",
+                    ignoreBoundaries: false,
+                    listenX: false,
+                    interactive: true,
+                    resize: true,
+                },
+                mouseWheel: true,
+                disableMouse: true,
+                disablePointer: true,
+                disableTouch: true,
+                // interactiveScrollbars: true,
+                // shrinkScrollbars: 'scale',
+            })
         })
     },
     updated: function (...args) {
@@ -310,12 +329,12 @@ Vue.component('footer-component', {
         }
     }
 })
-
 Vue.component('store-component', {
     template: `<div class="store">
                  <loading-component :tiptext="tiptext" v-if="loaderShow"></loading-component>
                  <header-component v-on:back="updateWithTop" v-on:top="top=true" v-on:search="update" :show="!loaderShow"></header-component>
-                 <list-component :docs="resource.docs" :top="top"></list-component>
+                 <list-component v-on:openViewer="open" :docs="resource.docs" :top="top"></list-component>
+                 <poster-component v-if="showViewer" v-on:close="showViewer=false" :cover="cover"></poster-component>
                  <footer-component v-on:modify="update" :currentpage="currentPage" :top="top" :totals="totalpages"></footer-component>
                  <div id="indicator" class="verticalScrollbar" :class="{'force-top': top}"><div class="custom-indicator"></div></div>
                </div>`,
@@ -323,6 +342,8 @@ Vue.component('store-component', {
         return {
             loaderShow: true,
             top: false,
+            showViewer: false,
+            cover: "",
             currentPage: !!localStorage.getItem("currentPage") ? Number(localStorage.getItem("currentPage")) : 0,
             resource: {},
             tiptext: '正在连接服务器...',
@@ -354,12 +375,16 @@ Vue.component('store-component', {
         }
     },
     methods: {
+        open: function(data) {
+            this.cover = data
+            this.showViewer = true
+        },
         update: function (data) {
             this.resource = Object.assign({}, this.resource, data.resource)
             this.currentPage = data.page
             !!data.store && localStorage.setItem('currentPage', this.currentPage)
         },
-        updateWithTop: function(data) {
+        updateWithTop: function (data) {
             this.update(data)
             this.top = false
         }

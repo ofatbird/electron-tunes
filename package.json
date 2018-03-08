@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "electron-builder"
+    "build": "electron-builder -w"
   },
   "build": {
     "appId": "com.guthub.ofatbird",
@@ -19,6 +19,9 @@
     },
     "win": {
       "target": ["nsis", "zip"]
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true
     }
   },
   "repository": {
