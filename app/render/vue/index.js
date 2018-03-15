@@ -51,6 +51,9 @@ Vue.component('header-component', {
                     <div class="search" v-if="show">
                         <input type="text" @keyup.enter="search" placeholder="search" />
                     </div>
+                    <div class="minizeBtn" @click="minizeWin">
+                        <img src="./assets/images/minus.svg">
+                    </div>
                     <div class="closeBtn" @click="closeWin">
                         <img src="./assets/images/close.svg">
                     </div>
@@ -77,6 +80,9 @@ Vue.component('header-component', {
     methods: {
         closeWin: function () {
             mainWindow.close()
+        },
+        minizeWin: function() {
+            mainWindow.minimize()
         },
         getBack: function () {
             const currentpage = Number(localStorage.getItem('currentPage'))
@@ -115,8 +121,8 @@ Vue.component('header-component', {
 })
 
 Vue.component('poster-component', {
-    template: `<div class="viewer-container">
-                    <div class="viewer-closeBtn" @click="close">
+    template: `<div class="viewer-container" @click="close">
+                    <div class="viewer-closeBtn">
                         <img src="./assets/images/close.svg">
                     </div>
                     <div class="loader"></div>
@@ -142,7 +148,10 @@ Vue.component('list-component', {
                                 <div class="left">
                                     <img :src="item.pic"  @click="openViewer(item.pic)"/>
                                 </div>
-                                <div class="right" v-html="item.info"></div>
+                                <div class="right">
+                                   <div class="info" v-html="item.info"> </div>
+                                   <button class="btn btn-danger delete" @click="deleteByNumber(item.number)">报错</button>
+                                </div>
                             </div>
                             <div class="bottom-ctn">
                                 <table class="table table-striped">
@@ -168,7 +177,7 @@ Vue.component('list-component', {
                     </ul>
                     </div>
                    <!-- <div style="height:40px;"></div> -->
-                    <div class="tiptext" v-if="isCopied">链接已拷贝</div>
+                    <div class="tiptext" v-if="isCopied">{{tips}}</div>
                 </div>`,
     props: ['docs', 'top'],
     data: function () {
@@ -177,6 +186,7 @@ Vue.component('list-component', {
             propschanged: false,
             iscroll: null,
             isCopied: false,
+            tips: ''
         }
     },
     watch: {
@@ -224,6 +234,7 @@ Vue.component('list-component', {
     },
     methods: {
         copyText: function (text) {
+            this.tips = "链接已拷贝"
             clearTimeout(this.sid)
             clipboard.writeText(unescape(text))
             this.isCopied = true
@@ -233,6 +244,23 @@ Vue.component('list-component', {
         },
         openViewer: function (url) {
             this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
+        },
+        deleteByNumber: function (number) {
+            this.tips = "已通知管理员"
+            clearTimeout(this.sid)
+            this.isCopied = true
+            Store.findOneAndRemove({ number },/* { $set: { fake: true } },*/ (err) => {
+                if (!err) {
+                    this.sid = setTimeout(() => {
+                        this.isCopied = false
+                    }, 800)
+                } else {
+                    console.log(err)
+                }
+            })
+            // Store.findOne({number}).then((docs) => {
+            //     console.log(docs)
+            // })
         }
     },
     mounted: function () {
@@ -375,7 +403,7 @@ Vue.component('store-component', {
         }
     },
     methods: {
-        open: function(data) {
+        open: function (data) {
             this.cover = data
             this.showViewer = true
         },

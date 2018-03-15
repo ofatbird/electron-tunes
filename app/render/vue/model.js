@@ -6,6 +6,8 @@ const mySchema = new mongoose.Schema({
     pic: String,
     info: String,
     magnet: String,
+    fake: Boolean,
+    needDelete: Boolean,
     insertDate: {type:Number, index: true}
 })
 mySchema.plugin(mongoosePaginate)
