@@ -7,6 +7,7 @@ const { remote, clipboard } = electron
 let searchValue = ''
 // localStorage.removeItem("currentPage")
 const mainWindow = remote.getCurrentWindow()
+const limits = 10
 // connect to MongoDB Atlas
 function connectMongo(excute) {
     // mongodb://admin:785689@cluster0-shard-00-00-koeuy.mongodb.net:27017,cluster0-shard-00-01-koeuy.mongodb.net:27017,cluster0-shard-00-02-koeuy.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin
@@ -26,7 +27,7 @@ function connectMongo(excute) {
 function getBundles(offset, query) {
     if (!query) query = {}
     return new Promise((resolve, reject) => {
-        Store.paginate(query, { sort: '-insertDate', offset, limit: 15 }, function (err, result) {
+        Store.paginate(query, { sort: '-insertDate', offset, limit: limits }, function (err, result) {
             if (err) { reject(err) } else { resolve(result) }
         })
     })
@@ -88,7 +89,7 @@ Vue.component('header-component', {
             const currentpage = Number(localStorage.getItem('currentPage'))
             this.isloading = true
             searchValue = ''
-            getBundles(currentpage * 15).then(resource => {
+            getBundles(currentpage * limits).then(resource => {
                 this.$emit('back', {
                     resource,
                     page: currentpage,
@@ -330,7 +331,7 @@ Vue.component('footer-component', {
         getPrevPageContent: function () {
             const query = searchValue || ''
             this.isloading = true
-            getBundles((this.currentpage - 1) * 15, query).then(resource => {
+            getBundles((this.currentpage - 1) * limits, query).then(resource => {
                 this.isloading = false
                 this.modify(resource, this.currentpage - 1, !query)
             })
@@ -338,7 +339,7 @@ Vue.component('footer-component', {
         getNextPageContent: function () {
             const query = searchValue || ''
             this.isloading = true
-            getBundles(this.value * 15, query).then(resource => {
+            getBundles(this.value * limits, query).then(resource => {
                 this.isloading = false
                 this.modify(resource, this.value, !query)
             })
@@ -349,7 +350,7 @@ Vue.component('footer-component', {
             e.target.blur()
             if (isNaN(value) || value > this.totals || !value || value === this.value) return
             this.isloading = true
-            getBundles((value - 1) * 15, query).then(resource => {
+            getBundles((value - 1) * limits, query).then(resource => {
                 this.isloading = false
                 this.modify(resource, value - 1, !query)
             })
@@ -381,7 +382,7 @@ Vue.component('store-component', {
         connectMongo(() => {
             this.tiptext = "正在加载资源..."
         })
-        getBundles(this.currentPage * 15).then(resource => {
+        getBundles(this.currentPage * limits).then(resource => {
             console.log('fetched')
             // this.docs = resource.docs
             this.resource = Object.assign({}, this.resource, resource)
@@ -399,7 +400,7 @@ Vue.component('store-component', {
 
     computed: {
         totalpages: function () {
-            return Math.ceil(this.resource.total / 15)
+            return Math.ceil(this.resource.total / limits)
         }
     },
     methods: {

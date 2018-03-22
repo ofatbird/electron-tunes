@@ -18,7 +18,10 @@
       "owner": "ofatbird"
     },
     "win": {
-      "target": ["nsis", "zip"]
+      "target": [
+        "nsis",
+        "zip"
+      ]
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true
