@@ -164,7 +164,7 @@ Vue.component('list-component', {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-for="magnet in item.maglist">
+                                        <template v-for="magnet in item.magnet">
                                         <tr>
                                             <td class="hidden">{{magnet.name}}</td>
                                             <td class="hidden">{{magnet.size}}</td>
@@ -197,40 +197,8 @@ Vue.component('list-component', {
     },
     computed: {
         items: function () {
-            return this.docs ? this.docs.map(element => {
-                const parser = new DOMParser();
-                const htmltag = parser.parseFromString(element.magnet, "text/html")
-                const infotag = parser.parseFromString(element.info, "text/html")
-                const atag = [].filter.call(htmltag.querySelectorAll('a'), (element) => {
-                    return element.className.indexOf('btn') == -1
-                })
-                const star = [].slice.call(infotag.querySelectorAll('.star-name>a'))
-                const info_p = infotag.querySelectorAll('p')
-                const list = []
-                let htmlstr = ''
-                element.info = ''
-                for (let i = 0; i < 3; i++) {
-                    element.info += info_p[i].outerHTML.replace(/style=\"[\s\S]*?\"/ig, '')
-                }
-
-                if (star.length) {
-                    star.forEach(ele => { htmlstr += `<span> ${ele.innerHTML} </span>` })
-                } else {
-                    htmlstr = ` <span> 未知 </span>`
-                }
-                element.info += `<p><span>演員:</span>${htmlstr}</p>`
-                for (let i = 0; i < atag.length; i += 3) {
-                    list.push({
-                        // htmlstr: `<span class="name">${atag[i].innerText}</span><span class="size">${atag[i + 1].innerText}</span>`,
-                        name: atag[i].innerText,
-                        size: atag[i + 1].innerText,
-                        href: unescape(atag[i].getAttribute('href')),
-                        // htmlstr: `<span class="name"></span><span class="size"></span>`,
-                    })
-                }
-                element.maglist = list
-                return element
-            }) : this.docs
+            console.log(this.docs)
+            return this.docs
         }
     },
     methods: {

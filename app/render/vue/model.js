@@ -5,7 +5,7 @@ const mySchema = new mongoose.Schema({
     number:  String,
     pic: String,
     info: String,
-    magnet: String,
+    magnet: Array,
     fake: Boolean,
     needDelete: Boolean,
     insertDate: {type:Number, index: true}
