@@ -151,7 +151,7 @@ Vue.component('list-component', {
                                 </div>
                                 <div class="right">
                                    <div class="info" v-html="item.info"> </div>
-                                   <button class="btn btn-danger delete" @click="deleteByNumber(item.number)">报错</button>
+                                   <button class="btn btn-danger delete" @click="deleteByNumber(item.number)">{{item.pic ? '报错': '删除'}}</button>
                                 </div>
                             </div>
                             <div class="bottom-ctn">
