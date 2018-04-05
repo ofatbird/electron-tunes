@@ -25,7 +25,8 @@ function connectMongo(excute) {
 
 // fetch resource
 function getBundles(offset, query) {
-    if (!query) query = {}
+    if (!query) query = {fake: false}
+    else query = Object.assign(query, {fake: false})
     return new Promise((resolve, reject) => {
         Store.paginate(query, { sort: '-insertDate', offset, limit: limits }, function (err, result) {
             if (err) { reject(err) } else { resolve(result) }
@@ -151,7 +152,7 @@ Vue.component('list-component', {
                                 </div>
                                 <div class="right">
                                    <div class="info" v-html="item.info"> </div>
-                                   <button class="btn btn-danger delete" @click="deleteByNumber(item.number)">{{item.pic ? '报错': '删除'}}</button>
+                                   <button class="btn btn-danger delete" @click="reportByNumber(item.number)">{{item.pic ? '报错': '删除'}}</button>
                                 </div>
                             </div>
                             <div class="bottom-ctn">
@@ -218,7 +219,7 @@ Vue.component('list-component', {
             this.tips = "已通知管理员"
             clearTimeout(this.sid)
             this.isCopied = true
-            Store.findOneAndRemove({ number },/* { $set: { fake: true } },*/ (err) => {
+            Store.findOneAndRemove({ number }, (err) => {
                 if (!err) {
                     this.sid = setTimeout(() => {
                         this.isCopied = false
@@ -227,9 +228,20 @@ Vue.component('list-component', {
                     console.log(err)
                 }
             })
-            // Store.findOne({number}).then((docs) => {
-            //     console.log(docs)
-            // })
+        },
+        reportByNumber: function (number) {
+            this.tips = "已通知管理员"
+            clearTimeout(this.sid)
+            this.isCopied = true
+            Store.findOneAndUpdate({ number }, { $set: { fake: true } }, (err) => {
+                if (!err) {
+                    this.sid = setTimeout(() => {
+                        this.isCopied = false
+                    }, 800)
+                } else {
+                    console.log(err)
+                }
+            })
         }
     },
     mounted: function () {
