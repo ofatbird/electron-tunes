@@ -100,7 +100,6 @@ Vue.component('header-component', {
             })
         },
         search: function (e) {
-            console.log('Hello')
             if (!e.target.value) return
             this.isloading = true
             e.target.blur()
@@ -111,6 +110,7 @@ Vue.component('header-component', {
                 this.isloading = false
                 this.search_model = true
                 this.count = resource.total
+                e.target.value = ''
                 this.$emit('top')
                 this.$emit('search', {
                     resource,
@@ -366,14 +366,16 @@ Vue.component('store-component', {
             console.log('fetched')
             // this.docs = resource.docs
             this.resource = Object.assign({}, this.resource, resource)
-            mainWindow.setOpacity(0)
+            mainWindow.hide()
             setTimeout(() => {
                 this.loaderShow = false
                 mainWindow.setMinimumSize(600, 700)
                 mainWindow.setSize(600, 700)
                 mainWindow.setResizable(true)
                 mainWindow.center()
-                mainWindow.setOpacity(1)
+                // mainWindow.setOpacity(1)
+                setTimeout(mainWindow.show, 0)
+                // mainWindow.show()
             }, 500)
         })
     },

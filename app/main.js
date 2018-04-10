@@ -18,7 +18,7 @@ function createWindow() {
     resizable: false,
     width: 400, height: 300,
     frame: false,
-    backgroundColor: '#a80903',
+    backgroundColor: '#f2f2f2',
     titleBarStyle: 'hidden'
   })
 
@@ -31,7 +31,7 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
