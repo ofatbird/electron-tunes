@@ -366,14 +366,14 @@ Vue.component('store-component', {
             console.log('fetched')
             // this.docs = resource.docs
             this.resource = Object.assign({}, this.resource, resource)
-            mainWindow.setOpacity(0)
+            mainWindow.hide()
             setTimeout(() => {
                 this.loaderShow = false
                 mainWindow.setMinimumSize(600, 700)
                 mainWindow.setSize(600, 700)
                 mainWindow.setResizable(true)
                 mainWindow.center()
-                mainWindow.setOpacity(1)
+                setTimeout(mainWindow.show, 1)
             }, 500)
         })
     },
