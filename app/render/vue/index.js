@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const electron = require('electron')
-const IScroll = require('./iscroll')
+// const IScroll = require('./iscroll')
 const Store = require('./model')
 const { remote, clipboard } = electron
 
@@ -36,11 +36,12 @@ function getBundles(offset, query) {
 
 Vue.component('loading-component', {
     template: `<div class="loading-content">
+                 <div class="animator"></div>
                  <!-- <span class="process-text">{{tiptext}}</span> -->
-                 <div class="spinner">
+                 <!--<div class="spinner">
                     <div class="cube1"></div>
                     <div class="cube2"></div>
-                 </div>
+                 </div> -->
                </div>`,
     props: ['tiptext']
 })
@@ -100,7 +101,6 @@ Vue.component('header-component', {
             })
         },
         search: function (e) {
-            console.log('Hello')
             if (!e.target.value) return
             this.isloading = true
             e.target.blur()
@@ -111,6 +111,7 @@ Vue.component('header-component', {
                 this.isloading = false
                 this.search_model = true
                 this.count = resource.total
+                e.target.value = ''
                 this.$emit('top')
                 this.$emit('search', {
                     resource,
@@ -141,7 +142,7 @@ Vue.component('poster-component', {
 })
 
 Vue.component('list-component', {
-    template: `<div class="main-content" :class="{'force-top': top}">
+    template: `<div class="main-content" ref="mainContent" :class="{'force-top': top}">
                    <!-- <div style="height:36px;"></div>-->
                    <div id="scroller">
                     <ul>
@@ -244,31 +245,13 @@ Vue.component('list-component', {
             })
         }
     },
-    mounted: function () {
-        this.$nextTick(() => {
-            this.iscroll = new IScroll('.main-content', {
-                // scrollbars: 'custom',
-                indicators: {
-                    el: "#indicator",
-                    ignoreBoundaries: false,
-                    listenX: false,
-                    interactive: true,
-                    resize: true,
-                },
-                mouseWheel: true,
-                disableMouse: true,
-                disablePointer: true,
-                disableTouch: true,
-                // interactiveScrollbars: true,
-                // shrinkScrollbars: 'scale',
-            })
-        })
-    },
+    
     updated: function (...args) {
         if (!this.propschanged) return
         this.propschanged = false // result in an update
-        this.iscroll.refresh()
-        this.iscroll.scrollTo(0, 0)
+        this.$refs.mainContent.scrollTop = 0
+        // this.iscroll.refresh()
+        // this.iscroll.scrollTo(0, 0)
     }
 })
 
@@ -373,7 +356,9 @@ Vue.component('store-component', {
                 mainWindow.setSize(600, 700)
                 mainWindow.setResizable(true)
                 mainWindow.center()
-                setTimeout(mainWindow.show, 1)
+                // mainWindow.setOpacity(1)
+                setTimeout(mainWindow.show, 10)
+                mainWindow.show()
             }, 500)
         })
     },

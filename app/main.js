@@ -7,7 +7,7 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -16,9 +16,10 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     resizable: false,
-    width: 400, height: 300,
+    width: 400, height: 400,
     frame: false,
-    backgroundColor: '#a80903',
+    show: false,
+    backgroundColor: '#f2f2f2',
     titleBarStyle: 'hidden'
   })
 
@@ -33,6 +34,10 @@ function createWindow() {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
+  // buggy
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows

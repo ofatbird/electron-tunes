@@ -8,7 +8,7 @@
   },
   "build": {
     "appId": "com.guthub.ofatbird",
-    "productName": "A Test APP",
+    "productName": "Lesbian Store",
     "directories": {
       "app": "./app"
     },
@@ -24,7 +24,8 @@
       ]
     },
     "nsis": {
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
     }
   },
   "repository": {
