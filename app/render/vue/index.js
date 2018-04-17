@@ -153,10 +153,18 @@ Vue.component('list-component', {
                                 </div>
                                 <div class="right">
                                    <div class="info" v-html="item.info"> </div>
-                                   <button class="btn btn-danger delete" @click="reportByNumber(item.number)">{{item.pic ? '报错': '删除'}}</button>
+                                   <div class="mags">
+                                        <p>点击拷贝</p>
+                                        <div class="tags">
+                                            <a class="tag" href="javascript:void(0)" v-for="magnet in item.magnet" @click="copyText(magnet.href)" :title="magnet.name">
+                                                {{magnet.size}}
+                                            </a>
+                                        </div>
+                                   </div>
+                                   <!--<button class="btn btn-danger delete" @click="reportByNumber(item.number)">{{item.pic ? '报错': '删除'}}</button>-->
                                 </div>
                             </div>
-                            <div class="bottom-ctn">
+                            <!--<div class="bottom-ctn">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -175,7 +183,7 @@ Vue.component('list-component', {
                                         </template>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div>-->
                         </li>
                     </ul>
                     </div>
@@ -328,7 +336,6 @@ Vue.component('store-component', {
                  <list-component v-on:openViewer="open" :docs="resource.docs" :top="top"></list-component>
                  <poster-component v-if="showViewer" v-on:close="showViewer=false" :cover="cover"></poster-component>
                  <footer-component v-on:modify="update" :currentpage="currentPage" :top="top" :totals="totalpages"></footer-component>
-                 <div id="indicator" class="verticalScrollbar" :class="{'force-top': top}"><div class="custom-indicator"></div></div>
                </div>`,
     data: function () {
         return {
@@ -385,6 +392,3 @@ Vue.component('store-component', {
     }
 })
 
-// new Vue({
-//     el: '#container'
-// })
