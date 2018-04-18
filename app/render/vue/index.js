@@ -222,7 +222,13 @@ Vue.component('list-component', {
             }, 900)
         },
         openViewer: function (url) {
-            this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
+            //960x544
+            if (url.indexOf()) {
+                this.$emit('openViewer', url.replace('307x224', '960x544'))
+            } else {
+                this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
+            }
+            
         },
         deleteByNumber: function (number) {
             this.tips = "已通知管理员"
