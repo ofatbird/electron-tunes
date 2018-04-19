@@ -1,6 +1,6 @@
 const electron = require('electron')
 // Module to control application life.
-const app = electron.app
+const {app, Menu, Tray} = electron
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -12,7 +12,7 @@ require('electron-reload')(__dirname)
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow() {
+function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     resizable: false,
@@ -50,7 +50,20 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+let tray = null
+app.on('ready', function () {
+  createWindow()
+  tray = new Tray('./assets/images/tray.png')
+  const contextMenu = Menu.buildFromTemplate([
+    {label: '显示', type: 'normal',click: () => {mainWindow.show()}},
+    {label: '退出', type: 'normal', click: () => {mainWindow.close()}}
+  ])
+  tray.setToolTip('Lesbian Store.')
+  tray.setContextMenu(contextMenu)
+  tray.on('double-click', () => {
+    mainWindow.show()
+  })
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

@@ -82,7 +82,7 @@ Vue.component('header-component', {
     },
     methods: {
         closeWin: function () {
-            mainWindow.close()
+            mainWindow.hide()
         },
         minizeWin: function() {
             mainWindow.minimize()

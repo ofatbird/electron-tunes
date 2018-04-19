@@ -32,11 +32,11 @@ body {
     left: -3px;
     width: 404px;
     height: 404px;
-    background-image: url('../images/cover.jpg');
+    /* background-image: url('../images/cover.jpg');
     background-attachment: fixed;
     background-position: center center;
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
     filter: blur(1px);
 }
 
@@ -55,8 +55,8 @@ p,
 .hidden,
 img,
 .info {
-    /* visibility: hidden;
-    opacity: 0; */
+    visibility: hidden;
+    opacity: 0;
 }
 
 table {
