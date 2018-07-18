@@ -25,8 +25,8 @@ function connectMongo(excute) {
 
 // fetch resource
 function getBundles(offset, query) {
-    if (!query) query = {fake: false}
-    else query = Object.assign(query, {fake: false})
+    if (!query) query = { fake: false }
+    else query = Object.assign(query, { fake: false })
     return new Promise((resolve, reject) => {
         Store.paginate(query, { sort: '-insertDate', offset, limit: limits }, function (err, result) {
             if (err) { reject(err) } else { resolve(result) }
@@ -84,7 +84,7 @@ Vue.component('header-component', {
         closeWin: function () {
             mainWindow.hide()
         },
-        minizeWin: function() {
+        minizeWin: function () {
             mainWindow.minimize()
         },
         getBack: function () {
@@ -140,7 +140,69 @@ Vue.component('poster-component', {
         }
     }
 })
-
+Vue.component('mosaic', {
+    template: `<canvas ref="canvas" class="canvas" :class="{show: !loading}"></canvas>`,
+    props: ['source'],
+    data: function () {
+        return {
+            img: new Image(),
+            loading: true
+        }
+    },
+    mounted: function() {
+        this.drawImage()
+    },
+    methods: {
+        drawImage: function () {
+            var img = this.img
+            var self = this
+            var canvas = this.$refs.canvas
+            var ctx = canvas.getContext('2d')
+            var imageData, data, hColor, wColor;
+            img.onload = function () {
+                var width = img.width
+                var height = img.height
+                self.$refs.canvas.setAttribute('width', width)
+                self.$refs.canvas.setAttribute('height', height)
+                ctx.drawImage(img, 0, 0)
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+                data = imageData.data
+                for (h = 0; h < height; h++) {
+                    var gap = h * width * 4
+                    if (h % 5 === 0) {
+                        hColor = {
+                            r: data[gap],
+                            g: data[gap + 1],
+                            b: data[gap + 2]
+                        }
+                    } else {
+                        data[gap] = hColor.r
+                        data[gap + 1] = hColor.g
+                        data[gap + 2] = hColor.b
+                    }
+                    wColor = hColor
+                    for (w = 1; w < width; w++) {
+                        var gap2 = gap + w * 4
+                        if (w % 3 === 0) {
+                            wColor = {
+                                r: data[gap2],
+                                g: data[gap2 + 1],
+                                b: data[gap2 + 2]
+                            }
+                        } else {
+                            data[gap2] = wColor.r
+                            data[gap2 + 1] = wColor.g
+                            data[gap2 + 2] = wColor.b
+                        }
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                self.loading = false
+            }
+            img.src = this.source
+        }
+    }
+})
 Vue.component('list-component', {
     template: `<div class="main-content" ref="mainContent" :class="{'force-top': top}">
                    <!-- <div style="height:36px;"></div>-->
@@ -149,7 +211,8 @@ Vue.component('list-component', {
                         <li class="itemlist" v-for="item in items" :key="item.number">
                             <div class="top-ctn">
                                 <div class="left">
-                                    <img :src="item.pic"  @click="openViewer(item.pic)"/>
+                                    <mosaic :source="item.pic" @click="openViewer(item.pic)"></mosaic>
+                                    <!--<img :src="item.pic"  @click="openViewer(item.pic)"/>-->
                                 </div>
                                 <div class="right">
                                    <div class="info" v-html="item.info"> </div>
@@ -207,7 +270,6 @@ Vue.component('list-component', {
     },
     computed: {
         items: function () {
-            console.log(this.docs)
             return this.docs
         }
     },
@@ -228,7 +290,7 @@ Vue.component('list-component', {
             } else {
                 this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
             }
-            
+
         },
         deleteByNumber: function (number) {
             this.tips = "已通知管理员"
@@ -259,7 +321,7 @@ Vue.component('list-component', {
             })
         }
     },
-    
+
     updated: function (...args) {
         if (!this.propschanged) return
         this.propschanged = false // result in an update
@@ -371,7 +433,7 @@ Vue.component('store-component', {
                 mainWindow.center()
                 // mainWindow.setOpacity(1)
                 setTimeout(mainWindow.show, 10)
-                mainWindow.show()
+                // mainWindow.show()
             }, 500)
         })
     },
