@@ -37,11 +37,20 @@ function getBundles(offset, query) {
 Vue.component('loading-component', {
     template: `<div class="loading-content">
                  <div class="animator"></div>
-                 <!-- <span class="process-text">{{tiptext}}</span> -->
-                 <!--<div class="spinner">
-                    <div class="cube1"></div>
-                    <div class="cube2"></div>
-                 </div> -->
+                 <div class="lds-spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
                </div>`,
     props: ['tiptext']
 })
@@ -149,7 +158,7 @@ Vue.component('mosaic', {
             loading: true
         }
     },
-    mounted: function() {
+    mounted: function () {
         this.drawImage()
     },
     methods: {
@@ -169,7 +178,7 @@ Vue.component('mosaic', {
                 data = imageData.data
                 for (h = 0; h < height; h++) {
                     var gap = h * width * 4
-                    if (h % 5 === 0) {
+                    if (h % 40 === 0) {
                         hColor = {
                             r: data[gap],
                             g: data[gap + 1],
@@ -183,7 +192,7 @@ Vue.component('mosaic', {
                     wColor = hColor
                     for (w = 1; w < width; w++) {
                         var gap2 = gap + w * 4
-                        if (w % 3 === 0) {
+                        if (w % 20 === 0) {
                             wColor = {
                                 r: data[gap2],
                                 g: data[gap2 + 1],
@@ -210,8 +219,8 @@ Vue.component('list-component', {
                     <ul>
                         <li class="itemlist" v-for="item in items" :key="item.number">
                             <div class="top-ctn">
-                                <div class="left">
-                                    <mosaic :source="item.pic" @click="openViewer(item.pic)"></mosaic>
+                                <div class="left" @click="openViewer(item.pic)">
+                                    <mosaic :source="item.pic"></mosaic>
                                     <!--<img :src="item.pic"  @click="openViewer(item.pic)"/>-->
                                 </div>
                                 <div class="right">
@@ -285,7 +294,7 @@ Vue.component('list-component', {
         },
         openViewer: function (url) {
             //960x544
-            if (url.indexOf()) {
+            if (url.indexOf('thumb')===-1) {
                 this.$emit('openViewer', url.replace('307x224', '960x544'))
             } else {
                 this.$emit('openViewer', url.replace('.jpg', '_b.jpg').replace('thumb', 'cover'))
@@ -326,8 +335,6 @@ Vue.component('list-component', {
         if (!this.propschanged) return
         this.propschanged = false // result in an update
         this.$refs.mainContent.scrollTop = 0
-        // this.iscroll.refresh()
-        // this.iscroll.scrollTo(0, 0)
     }
 })
 
